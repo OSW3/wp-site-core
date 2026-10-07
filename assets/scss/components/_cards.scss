@@ -1,0 +1,128 @@
+@use 'sass:color';
+@use '../abstracts/variables/colors' as colors;
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid colors.$color-gray-200;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  // Option carte cliquable
+  &--clickable {
+    cursor: pointer;
+
+    .card__title-link::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+  }
+
+  // Disposition horizontale (desktop)
+  &--horizontal {
+    @media (min-width: 640px) {
+      flex-direction: row;
+
+      .card__media {
+        width: 40%;
+        flex-shrink: 0;
+      }
+
+      .card__body {
+        width: 60%;
+      }
+    }
+  }
+
+  // Zone Image / Média
+  &__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: colors.$color-gray-100;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover &__media img {
+    transform: scale(1.03);
+  }
+
+  // Placement du Badge sur l'image
+  &__badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+  }
+
+  // Contenu principal
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__meta {
+    font-size: 0.75rem;
+    color: colors.$color-gray-500;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: colors.$color-gray-900;
+  }
+
+  &__title-link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: colors.$color-primary;
+    }
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 0.875rem;
+    color: colors.$color-gray-600;
+    line-height: 1.5;
+  }
+
+  // Pied de carte
+  &__footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid colors.$color-gray-100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+}

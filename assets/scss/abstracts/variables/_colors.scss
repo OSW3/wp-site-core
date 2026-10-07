@@ -1,0 +1,36 @@
+// 1. Couleurs de base (Brand & System)
+$color-primary: #0066cc !default;
+$color-secondary: #1a1a1a !default;
+$color-accent: #ff9900 !default;
+$color-pumpkin: #ff7518 !default;
+
+// 2. Nuances Neutres (Grays)
+$color-white: #ffffff !default;
+$color-gray-100: #f8f9fa !default;
+$color-gray-200: #e9ecef !default;
+$color-gray-300: #dee2e6 !default;
+$color-gray-400: #ced4da !default;
+$color-gray-500: #adb5bd !default;
+$color-gray-600: #6c757d !default;
+$color-gray-700: #495057 !default;
+$color-gray-800: #343a40 !default;
+$color-gray-900: #212529 !default;
+$color-black: #000000 !default;
+
+// 3. Couleurs d'état (Contextual)
+$color-success: #198754 !default;
+$color-info: #0dcaf0 !default;
+$color-warning: #ffc107 !default;
+$color-danger: #dc3545 !default;
+
+// 4. Map globale pour itération (utilisée par l'éditeur Gutenberg / support de thème)
+$theme-colors: (
+  'primary': $color-primary,
+  'secondary': $color-secondary,
+  'accent': $color-accent,
+  'pumpkin': $color-pumpkin,
+  'success': $color-success,
+  'info': $color-info,
+  'warning': $color-warning,
+  'danger': $color-danger
+) !default;

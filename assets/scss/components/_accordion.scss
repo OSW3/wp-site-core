@@ -1,0 +1,125 @@
+@use '../abstracts/variables/colors' as colors;
+
+.accordion {
+  padding: 4rem 1.5rem;
+  background-color: colors.$color-white;
+
+  &__wrapper {
+    max-width: 800px;
+  }
+
+  &__title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: colors.$color-primary;
+    text-align: center;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__item {
+    border: 1px solid colors.$color-gray-300;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+
+    &--open {
+      border-color: colors.$color-pumpkin;
+    }
+  }
+
+  &__heading {
+    margin: 0;
+  }
+
+  &__trigger {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background-color: colors.$color-gray-100;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+
+    &[aria-expanded="true"] {
+      .accordion__icon::after {
+        opacity: 0;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid colors.$color-primary;
+      outline-offset: -2px;
+    }
+  }
+
+  &__question {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: colors.$color-gray-900;
+  }
+
+  &__icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      background-color: colors.$color-pumpkin;
+      border-radius: 2px;
+      transition: transform 0.2s ease;
+    }
+
+    /* Barre horizontale */
+    &::before {
+      top: 7px;
+      left: 0;
+      width: 16px;
+      height: 2px;
+    }
+
+    /* Barre verticale */
+    &::after {
+      top: 0;
+      left: 7px;
+      width: 2px;
+      height: 16px;
+      transition: opacity 0.2s ease;
+    }
+  }
+
+  &__panel {
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__content {
+    padding: 1.25rem 1.5rem;
+    color: colors.$color-gray-700;
+    line-height: 1.6;
+
+    p {
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+// Raccourci de centrage ou d'alignement Flexbox
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between($align: center, $direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: space-between;
+  align-items: $align;
+}

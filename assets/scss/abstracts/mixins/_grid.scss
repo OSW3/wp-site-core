@@ -1,0 +1,15 @@
+@use '../variables/grid' as grid-vars;
+
+// Helper CSS Grid raccourci
+@mixin grid-columns($cols: 12, $gap: grid-vars.$grid-gutter-width) {
+  display: grid;
+  grid-template-columns: repeat($cols, minmax(0, 1fr));
+  gap: $gap;
+}
+
+// Grille auto-responsive sans media queries
+@mixin grid-auto-fit($min-width: 250px, $gap: grid-vars.$grid-gutter-width) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+  gap: $gap;
+}

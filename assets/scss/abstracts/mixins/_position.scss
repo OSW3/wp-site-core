@@ -1,0 +1,33 @@
+@use 'sass:map';
+@use '../variables/z-index' as z-vars;
+
+@mixin position($type, $top: null, $right: null, $bottom: null, $left: null, $z-index: null) {
+  position: $type;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+
+  @if $z-index {
+    @if map.has-key(z-vars.$z-indexes, $z-index) {
+      z-index: map.get(z-vars.$z-indexes, $z-index);
+    } @else {
+      z-index: $z-index;
+    }
+  }
+}
+
+@mixin absolute($args...) {
+  @include position(absolute, $args...);
+}
+
+@mixin fixed($args...) {
+  @include position(fixed, $args...);
+}
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

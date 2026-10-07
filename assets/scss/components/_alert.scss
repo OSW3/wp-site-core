@@ -1,0 +1,97 @@
+@use 'sass:color' as color;
+@use '../abstracts/variables/colors' as colors;
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-left: 4px solid colors.$color-info;
+  background-color: colors.$color-gray-100;
+  color: colors.$color-gray-900;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+
+  &__content {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  &__title {
+    font-weight: 700;
+    margin-right: 0.25rem;
+  }
+
+  &__dismiss {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: colors.$color-gray-600;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+      color: colors.$color-gray-900;
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  /* Modificateurs d'état (Contextual Colors) */
+  &--info {
+    border-color: colors.$color-info;
+    background-color: color.adjust(colors.$color-info, $lightness: 45%);
+
+    .alert__icon {
+      color: colors.$color-info;
+    }
+  }
+
+  &--success {
+    border-color: colors.$color-success;
+    background-color: color.adjust(colors.$color-success, $lightness: 55%);
+
+    .alert__icon {
+      color: colors.$color-success;
+    }
+  }
+
+  &--warning {
+    border-color: colors.$color-warning;
+    background-color: color.adjust(colors.$color-warning, $lightness: 45%);
+
+    .alert__icon {
+      color: color.adjust(colors.$color-warning, $lightness: -15%);
+    }
+  }
+
+  &--danger {
+    border-color: colors.$color-danger;
+    background-color: color.adjust(colors.$color-danger, $lightness: 45%);
+
+    .alert__icon {
+      color: colors.$color-danger;
+    }
+  }
+
+  /* Classe d'animation de fermeture JS */
+  &--dismissed {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+  }
+}

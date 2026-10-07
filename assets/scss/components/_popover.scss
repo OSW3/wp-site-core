@@ -1,0 +1,61 @@
+@use '../abstracts/variables/colors' as colors;
+
+.popover {
+  display: inline-block;
+
+  &--inline {
+    display: inline;
+  }
+
+  &__trigger {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid colors.$color-primary;
+      outline-offset: 2px;
+    }
+  }
+
+  &__panel {
+    display: none;
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 1rem;
+    width: 20rem;
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100dvh - 1rem);
+    overflow: auto;
+    overflow-wrap: anywhere;
+    color: colors.$color-gray-900;
+    background: colors.$color-white;
+    border: 1px solid colors.$color-gray-300;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+
+    &:popover-open { display: block; }
+  }
+
+  &__title {
+    display: block;
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  &__content {
+    display: block;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+
+    > :first-child { margin-top: 0; }
+    > :last-child { margin-bottom: 0; }
+  }
+}

@@ -5,6 +5,7 @@ namespace OSW3\WpSiteCore;
 use OSW3\WpSiteCore\Interfaces\ModuleInterface;
 use OSW3\WpSiteCore\Register\MenuLocationsRegister;
 use OSW3\WpSiteCore\Register\MenusRegister;
+use OSW3\WpSiteCore\Services\PatternService;
 
 class Module implements ModuleInterface
 {
@@ -82,6 +83,18 @@ class Module implements ModuleInterface
     }
 
     /**
+     * Get the path of the module.
+     *
+     * @return string The path of the module.
+     */
+    public static function getPath(): string
+    {
+        $path = plugin_dir_path(__FILE__);
+        $path = str_replace('src/', '', $path);
+        return $path;
+    }
+
+    /**
      * Get the singleton instance of the Module class.
      *
      * @return self The singleton instance.
@@ -132,5 +145,9 @@ class Module implements ModuleInterface
                 register_nav_menus($locations);
             });
         }
+
+
+        // Register block patterns
+        PatternService::register( self::getPath() . 'patterns/' );
     }
 }

@@ -1,0 +1,138 @@
+@use 'sass:map';
+@use 'sass:math';
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+@use '../abstracts/placeholders';
+
+// ==========================================
+// 1. Conteneurs
+// ==========================================
+
+.container {
+  @extend %container-base;
+
+  @each $breakpoint, $max-width in vars.$container-max-widths {
+    @include mix.respond-to($breakpoint) {
+      max-width: $max-width;
+    }
+  }
+}
+
+.container-fluid {
+  @extend %container-base;
+}
+
+// ==========================================
+// 2. Rangees (Rows) & Colonnes (Cols)
+// ==========================================
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: math.div(vars.$grid-gutter-width, -2);
+  margin-left: math.div(vars.$grid-gutter-width, -2);
+
+  &--no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+
+    > [class*='col-'] {
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
+}
+
+// Base commune à toutes les colonnes
+%col-base {
+  position: relative;
+  width: 100%;
+  padding-right: math.div(vars.$grid-gutter-width, 2);
+  padding-left: math.div(vars.$grid-gutter-width, 2);
+}
+
+// Layout automatique
+.col {
+  @extend %col-base;
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+.col-auto {
+  @extend %col-base;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}
+
+// Génération des colonnes de base (.col-1 à .col-12)
+@for $i from 1 through vars.$grid-columns {
+  .col-#{$i} {
+    @extend %col-base;
+    flex: 0 0 math.percentage(math.div($i, vars.$grid-columns));
+    max-width: math.percentage(math.div($i, vars.$grid-columns));
+  }
+}
+
+// Génération des colonnes réactives par breakpoint (.col-sm-6, .col-md-4, etc.)
+@each $breakpoint, $width in vars.$breakpoints {
+  @include mix.respond-to($breakpoint) {
+    .col-#{$breakpoint} {
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+    }
+
+    .col-#{$breakpoint}-auto {
+      flex: 0 0 auto;
+      width: auto;
+      max-width: 100%;
+    }
+
+    @for $i from 1 through vars.$grid-columns {
+      .col-#{$breakpoint}-#{$i} {
+        flex: 0 0 math.percentage(math.div($i, vars.$grid-columns));
+        max-width: math.percentage(math.div($i, vars.$grid-columns));
+      }
+    }
+
+    // Offsets (.offset-md-2, etc.) sans syntaxeif() obsolète
+    @for $i from 0 through (vars.$grid-columns - 1) {
+      .offset-#{$breakpoint}-#{$i} {
+        $num: math.div($i, vars.$grid-columns);
+
+        @if $num == 0 {
+          margin-left: 0;
+        } @else {
+          margin-left: math.percentage($num);
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// 3. Layouts d'affichage specifiques
+// ==========================================
+
+// Layout moderne avec sidebar via CSS Grid
+.layout-with-sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: vars.$grid-gutter-width;
+
+  @include mix.respond-to('lg') {
+    grid-template-columns: 1fr 300px;
+  }
+
+  &--left {
+    @include mix.respond-to('lg') {
+      grid-template-columns: 300px 1fr;
+
+      .site-sidebar {
+        order: -1;
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+@use '../abstracts/variables/colors' as colors;
+
+.video-player {
+  margin-block: 2rem;
+  &__title { margin-bottom: 1rem; }
+  &__frame {
+    position: relative;
+    aspect-ratio: var(--video-ratio, 16 / 9);
+    background: #000;
+    video, iframe { display: block; width: 100%; height: 100%; border: 0; }
+    video { object-fit: contain; }
+  }
+  &__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    overflow: auto;
+    text-align: center;
+    color: colors.$color-white;
+    img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; pointer-events: none; }
+    p, button { position: relative; flex-shrink: 0; margin: 0; }
+  }
+  &__status { color: colors.$color-danger; }
+  [hidden] { display: none; }
+  :focus-visible { outline: 2px solid colors.$color-primary; outline-offset: 2px; }
+}

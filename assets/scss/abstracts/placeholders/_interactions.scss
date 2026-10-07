@@ -1,0 +1,22 @@
+// Empêche la sélection de texte
+%user-select-none {
+  user-select: none;
+}
+
+// Désactive les événements pointeur
+%pointer-events-none {
+  pointer-events: none;
+}
+
+// Contour de focus accessible (A11y)
+%focus-ring {
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+// Effet de transition fluide au survol
+%transition-hover {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}

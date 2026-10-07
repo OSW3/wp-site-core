@@ -1,0 +1,35 @@
+// Masque visuellement un élément tout en le gardant accessible (Lecteurs d'écran / A11y)
+// Équivalent natif au .screen-reader-text de WordPress
+%visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Centrage horizontal automatique pour les blocs à largeur fixe
+%center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Conteneur réactif centré
+%container-base {
+  @extend %center-block;
+  width: 100%;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+// Tronquer le texte sur une seule ligne avec points de suspension
+%text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

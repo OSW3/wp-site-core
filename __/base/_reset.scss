@@ -1,0 +1,71 @@
+@use '../abstracts/variables' as vars;
+
+// 1. Modèle de boîte universel
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// 2. Suppression des marges/paddings par défaut et gestion du scroll
+html {
+  font-size: vars.$font-size-root; // 16px
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  font-family: vars.$font-family-base;
+  font-size: vars.$font-size-base;
+  line-height: vars.$line-height-base;
+}
+
+// 3. Médias réactifs par défaut
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// 4. Héritage pour les éléments de formulaire
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+// 5. Suppression des bordures par défaut sur les boutons et cartes
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+// 6. Accessibilité : Respect des préférences d'animations réduites
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

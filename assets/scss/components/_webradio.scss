@@ -1,0 +1,50 @@
+@use '../abstracts/variables/colors' as colors;
+
+.webradio {
+  margin-block: 2rem;
+  padding: 1.5rem;
+  border: 1px solid colors.$color-gray-300;
+  border-radius: 0.5rem;
+  &__title { margin-bottom: 1rem; }
+  &__track { display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; }
+  &__artwork {
+    width: 9rem;
+    max-width: 100%;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: colors.$color-gray-100;
+    text-align: center;
+    overflow: hidden;
+    img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    span { padding: 1rem; }
+  }
+  &__metadata {
+    flex: 1 1 12rem;
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+    div + div { margin-top: 0.5rem; }
+    dt { font-weight: 600; }
+    dd { margin: 0; }
+  }
+  audio { display: none; }
+  &__controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+  &__volume {
+    display: flex;
+    flex: 1 1 10rem;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: 18rem;
+    input { width: 100%; min-height: 2rem; accent-color: colors.$color-primary; cursor: pointer; }
+    output { font-variant-numeric: tabular-nums; }
+  }
+  &__state { margin-block: 1rem 0; font-weight: 600; }
+  &[data-radio-state="loading"] .webradio__state { color: colors.$color-primary; }
+  &[data-radio-state="error"] .webradio__state { color: colors.$color-danger; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  &__status { color: colors.$color-danger; }
+  [hidden] { display: none; }
+  :focus-visible { outline: 2px solid colors.$color-primary; outline-offset: 2px; }
+}

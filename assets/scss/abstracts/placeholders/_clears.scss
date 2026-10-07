@@ -1,0 +1,20 @@
+// Clearfix classique pour les éléments flottants
+%clearfix {
+  &::after {
+    display: block;
+    clear: both;
+    content: "";
+  }
+}
+
+// Reset rapide des marges et paddings
+%reset-spacing {
+  margin: 0;
+  padding: 0;
+}
+
+// Reset des listes (puces, retraits)
+%reset-list {
+  @extend %reset-spacing;
+  list-style: none;
+}

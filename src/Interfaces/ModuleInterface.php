@@ -45,6 +45,13 @@ interface ModuleInterface
      * @return string The relative path to the main file.
      */
     public static function getFile(): string;
+
+    /**
+     * Absolute path to the module's main directory.
+     *
+     * @return string The absolute path to the module's main directory.
+     */
+    public static function getPath(): string;
     
     /**
      * Get the singleton instance of the Module class.

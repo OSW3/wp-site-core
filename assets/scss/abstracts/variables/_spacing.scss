@@ -1,0 +1,19 @@
+// Base pivot
+$spacer: 1rem !default;
+
+// Échelle d'espacement globale
+$spacing-xs: $spacer * 0.25 !default; // 4px / 0.25rem
+$spacing-sm: $spacer * 0.5  !default; // 8px / 0.5rem
+$spacing-base: $spacer      !default; // 16px / 1rem
+$spacing-md: $spacing-base  !default; // Alias de précaution
+$spacing-lg: $spacer * 1.5  !default; // 24px / 1.5rem
+$spacing-xl: $spacer * 3    !default; // 48px / 3rem
+
+$spacers: (
+  'xs': $spacing-xs,
+  'sm': $spacing-sm,
+  'base': $spacing-base,
+  'md': $spacing-md,
+  'lg': $spacing-lg,
+  'xl': $spacing-xl
+) !default;

@@ -1,0 +1,29 @@
+// 1. Familles de polices
+$font-family-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace !default;
+$font-family-base: $font-family-sans-serif !default;
+
+// 2. Tailles de police (Base & Headings)
+$font-size-root: 16px !default;
+$font-size-base: 1rem !default; // 16px
+$font-size-sm: 0.875rem !default; // 14px
+$font-size-lg: 1.25rem !default; // 20px
+
+$font-sizes: (
+  'h1': 2.5rem,  // 40px
+  'h2': 2rem,    // 32px
+  'h3': 1.75rem, // 28px
+  'h4': 1.5rem,  // 24px
+  'h5': 1.25rem, // 20px
+  'h6': 1rem     // 16px
+) !default;
+
+// 3. Graisses (Font Weights)
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-bold: 700 !default;
+
+// 4. Hauteurs de ligne (Line Heights)
+$line-height-base: 1.5 !default;
+$line-height-heading: 1.2 !default;

@@ -1,0 +1,24 @@
+// Définition de l'aspect ratio (images, vidéos embeds)
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: $width / $height;
+
+  @supports not (aspect-ratio: 1 / 1) {
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      padding-top: ($height / $width) * 100%;
+    }
+  }
+}
+
+// Raccourci pour taille carrée ou circulaire
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin circle($size) {
+  @include square($size);
+  border-radius: 50%;
+}

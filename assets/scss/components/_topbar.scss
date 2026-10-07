@@ -1,0 +1,35 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '../abstracts/variables/colors' as colors;
+@use '../abstracts/variables/z-index' as layers;
+
+.topbar {
+  padding: 0.5rem 0;
+  color: colors.$color-gray-900;
+  background: colors.$color-gray-100;
+  border-bottom: 1px solid colors.$color-gray-300;
+  font-size: 0.875rem;
+
+  &--sticky { position: sticky; top: 0; z-index: map.get(layers.$z-indexes, 'sticky'); }
+  &--ghost { background: transparent; border-color: transparent; }
+  &--outline { background: transparent; border-color: colors.$color-primary; }
+
+  @each $name, $value in colors.$theme-colors {
+    &--#{$name} {
+      background: color.mix($value, colors.$color-white, 12%);
+      border-color: color.mix($value, colors.$color-white, 45%);
+    }
+  }
+
+  &__inner { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+  &__content { flex: 1 1 15rem; overflow-wrap: anywhere; > :first-child { margin-top: 0; } > :last-child { margin-bottom: 0; } }
+  &__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; list-style: none; padding: 0; margin: 0; }
+  a { color: inherit; text-underline-offset: 0.2em; }
+  :focus-visible { outline: 2px solid colors.$color-primary; outline-offset: 3px; }
+}
+
+body.admin-bar .topbar--sticky {
+  top: 32px;
+  @media (max-width: 782px) { top: 46px; }
+  @media (max-width: 600px) { top: 0; }
+}

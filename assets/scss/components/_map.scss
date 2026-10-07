@@ -1,0 +1,39 @@
+@use '../abstracts/variables/colors' as colors;
+
+.map {
+  margin-block: 2rem;
+  &__title { margin-bottom: 1rem; }
+  &__frame { position: relative; height: var(--map-height, 400px); border: 1px solid colors.$color-gray-300; }
+  &__canvas {
+    width: 100%;
+    height: 100%;
+    iframe { display: block; width: 100%; height: 100%; border: 0; }
+    &[hidden] { display: none; }
+  }
+  &__placeholder {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: colors.$color-gray-100;
+    &[hidden] { display: none; }
+    p { max-width: 40rem; margin: 0; }
+    [hidden] { display: none; }
+  }
+  &__status { color: colors.$color-danger; }
+  &__marker {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid colors.$color-white;
+    border-radius: 50%;
+    background: colors.$color-primary;
+    box-shadow: 0 0 0 2px colors.$color-primary, 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+  &__provider-logo { position: absolute; left: 0.5rem; bottom: 2.5rem; z-index: 2; img { display: block; height: 32px; width: auto; } }
+  .maplibregl-ctrl-attrib { max-width: 100%; font-size: 11px; }
+  :focus-visible { outline: 2px solid colors.$color-primary; outline-offset: 2px; }
+}

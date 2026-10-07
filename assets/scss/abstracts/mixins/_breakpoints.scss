@@ -1,0 +1,36 @@
+@use 'sass:map';
+@use '../variables/breakpoints' as vars;
+
+@mixin respond-to($breakpoint) {
+  @if map.has-key(vars.$breakpoints, $breakpoint) {
+    @media (min-width: map.get(vars.$breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Le breakpoint '#{$breakpoint}' n'existe pas dans $breakpoints.";
+  }
+}
+
+@mixin respond-down($breakpoint) {
+  @if map.has-key(vars.$breakpoints, $breakpoint) {
+    $width: map.get(vars.$breakpoints, $breakpoint);
+    @media (max-width: ($width - 0.02px)) {
+      @content;
+    }
+  } @else {
+    @warn "Le breakpoint '#{$breakpoint}' n'existe pas dans $breakpoints.";
+  }
+}
+
+@mixin respond-between($lower, $upper) {
+  @if map.has-key(vars.$breakpoints, $lower) and map.has-key(vars.$breakpoints, $upper) {
+    $min-width: map.get(vars.$breakpoints, $lower);
+    $max-width: map.get(vars.$breakpoints, $upper) - 0.02px;
+
+    @media (min-width: $min-width) and (max-width: $max-width) {
+      @content;
+    }
+  } @else {
+    @warn "Un des breakpoints ('#{$lower}', '#{$upper}') n'existe pas.";
+  }
+}

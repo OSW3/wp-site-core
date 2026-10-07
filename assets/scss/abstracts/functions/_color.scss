@@ -1,0 +1,23 @@
+@use 'sass:color';
+@use 'sass:map';
+@use '../variables/colors' as color-vars;
+
+@function alpha($color, $opacity) {
+  @return color.change($color, $alpha: $opacity);
+}
+
+@function tint($color, $percentage) {
+  @return color.mix(color-vars.$color-white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return color.mix(color-vars.$color-black, $color, $percentage);
+}
+
+@function theme-color($key) {
+  @if map.has-key(color-vars.$theme-colors, $key) {
+    @return map.get(color-vars.$theme-colors, $key);
+  }
+  @warn "La couleur '#{$key}' n'existe pas dans $theme-colors.";
+  @return null;
+}

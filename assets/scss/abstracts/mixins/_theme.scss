@@ -1,0 +1,10 @@
+// Support pour le mode sombre (Dark Mode) natif ou via classe sur <html> / <body>
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+
+  :root[data-theme="dark"] & {
+    @content;
+  }
+}

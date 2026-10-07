@@ -1,0 +1,22 @@
+@use 'sass:math';
+@use 'sass:meta';
+@use '../variables/typography' as typo-vars;
+
+@function strip-unit($number) {
+  @if meta.type-of($number) == 'number' and not math.is-unitless($number) {
+    @return math.div($number, ($number * 0 + 1));
+  }
+  @return $number;
+}
+
+@function rem($pixels, $context: typo-vars.$font-size-root) {
+  $px: strip-unit($pixels);
+  $base: strip-unit($context);
+  @return math.div($px, $base) * 1rem;
+}
+
+@function em($pixels, $context: typo-vars.$font-size-root) {
+  $px: strip-unit($pixels);
+  $base: strip-unit($context);
+  @return math.div($px, $base) * 1em;
+}

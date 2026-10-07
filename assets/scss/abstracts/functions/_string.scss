@@ -1,0 +1,21 @@
+@use 'sass:string';
+
+// Remplace une sous-chaîne dans une chaîne de caractères
+@function str-replace($string, $search, $replace: '') {
+  $index: string.index($string, $search);
+
+  @if $index {
+    @return string.slice($string, 1, $index - 1) + $replace + str-replace(string.slice($string, $index + string.length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+// Encode un SVG pour une utilisation propre dans url("data:image/svg+xml;...")
+@function svg-encode($svg) {
+  $encoded: str-replace($svg, '"', "'");
+  $encoded: str-replace($encoded, '<', '%3C');
+  $encoded: str-replace($encoded, '>', '%3E');
+  $encoded: str-replace($encoded, '#', '%23');
+  @return 'data:image/svg+xml;utf8,' + $encoded;
+}

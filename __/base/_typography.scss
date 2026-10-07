@@ -1,0 +1,75 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/mixins' as mix;
+@use '../abstracts/placeholders';
+
+body {
+  font-family: vars.$font-family-base;
+  font-size: vars.$font-size-base;
+  line-height: vars.$line-height-base;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+}
+
+// Titres
+h1, .h1 { @include mix.heading-size('h1'); }
+h2, .h2 { @include mix.heading-size('h2'); }
+h3, .h3 { @include mix.heading-size('h3'); }
+h4, .h4 { @include mix.heading-size('h4'); }
+h5, .h5 { @include mix.heading-size('h5'); }
+h6, .h6 { @include mix.heading-size('h6'); }
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: vars.$font-family-base;
+  font-weight: vars.$font-weight-bold;
+  line-height: vars.$line-height-heading;
+  color: var(--text-main);
+  margin-top: 0;
+  margin-bottom: vars.$spacing-base;
+}
+
+// Paragraphes & Blocs
+p {
+  margin-top: 0;
+  margin-bottom: vars.$spacing-base;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Liens
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  @extend %transition-hover;
+
+  &:hover {
+    color: var(--color-secondary);
+  }
+
+  @extend %focus-ring;
+}
+
+// Citations (Blockquotes WP)
+blockquote {
+  margin: 0 0 vars.$spacing-base;
+  padding-left: vars.$spacing-base;
+  border-left: 4px solid var(--color-primary);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+// Code
+code, pre, kbd {
+  font-family: vars.$font-family-monospace;
+  font-size: vars.$font-size-sm;
+}
+
+pre {
+  display: block;
+  padding: vars.$spacing-base;
+  background-color: var(--bg-surface);
+  border-radius: 0.25rem;
+  overflow-x: auto;
+}

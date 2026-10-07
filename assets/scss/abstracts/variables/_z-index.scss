@@ -1,0 +1,13 @@
+// Carte centralisée d'empilement des calques (Z-Index)
+$z-indexes: (
+  'below': -1,
+  'default': 1,
+  'dropdown': 100,
+  'sticky': 200,
+  'fixed': 300,
+  'offcanvas': 400,
+  'modal-backdrop': 500,
+  'modal': 600,
+  'popover': 700,
+  'tooltip': 800
+) !default;

@@ -1,0 +1,65 @@
+@use 'sass:color';
+@use '../abstracts/variables/colors' as colors;
+
+.btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  // Option pour coller les boutons (Segmented Control)
+  &--attached {
+    gap: 0;
+
+    .btn {
+      border-radius: 0;
+
+      &:first-child {
+        border-top-left-radius: 0.375rem;
+        border-bottom-left-radius: 0.375rem;
+      }
+
+      &:last-child {
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+      }
+
+      // Évite le doublement des bordures entre boutons
+      &:not(:last-child) {
+        border-right-width: 0;
+      }
+    }
+  }
+
+  // Alignment
+  &--align-center {
+    justify-content: center;
+  }
+
+  &--align-right {
+    justify-content: flex-end;
+  }
+
+  // Vertical stack sur mobile
+  &--vertical {
+    flex-direction: column;
+    align-items: stretch;
+
+    &.btn-group--attached {
+      .btn {
+        &:first-child {
+          border-radius: 0.375rem 0.375rem 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 0 0.375rem 0.375rem;
+        }
+
+        &:not(:last-child) {
+          border-right-width: 1px;
+          border-bottom-width: 0;
+        }
+      }
+    }
+  }
+}
