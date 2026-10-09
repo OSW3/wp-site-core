@@ -1,7 +1,7 @@
 {
     "name": "osw3/wp-site-core",
     "description": ".",
-    "type": "wordpress-plugin",
+    "type": "wordpress-muplugin",
     "license": "MIT",
     "authors": [
         {

@@ -17,11 +17,13 @@
 $args          = $args ?? [];
 $slides        = $args['slides'] ?? [];
 $type          = $args['type'] ?? 'standard';
+$transition    = $args['transition'] ?? 'slide';
 $per_view      = filter_var($args['per_view'] ?? 1, FILTER_VALIDATE_INT);
 $show_controls = $args['show_controls'] ?? true;
 $show_dots     = $args['show_dots'] ?? true;
 $loop          = $args['loop'] ?? true;
 $autoplay      = $args['autoplay'] ?? true;
+$show_pause    = $args['show_pause'] ?? true;
 $delay         = filter_var($args['delay'] ?? 5000, FILTER_VALIDATE_INT);
 $label         = $args['label'] ?? __('Carrousel', 'wp-theme-test');
 
@@ -42,12 +44,17 @@ if (empty($slides)) {
 
 // 5. Validate and sanitize remaining arguments
 $type          = in_array($type, ['standard', 'hero', 'cinematic'], true) ? $type : 'standard';
+$transition    = in_array($transition, ['slide', 'fade'], true) ? $transition : 'slide';
 $per_view      = $per_view !== false && in_array($per_view, [1, 2, 3], true) ? $per_view : 1;
+if ($transition === 'fade') {
+    $per_view = 1;
+}
 $delay         = $delay    !== false ? min(max($delay, 1000), 60000) : 5000;
 $show_controls = filter_var($show_controls, FILTER_VALIDATE_BOOLEAN);
 $show_dots     = filter_var($show_dots, FILTER_VALIDATE_BOOLEAN);
 $loop          = filter_var($loop, FILTER_VALIDATE_BOOLEAN);
 $autoplay      = filter_var($autoplay, FILTER_VALIDATE_BOOLEAN);
+$show_pause    = filter_var($show_pause, FILTER_VALIDATE_BOOLEAN);
 $label         = is_scalar($label) ? (string) $label : __('Carrousel', 'wp-theme-test');
 $carousel_id   = wp_unique_id('carousel-');
 $has_controls  = $show_controls && count($slides) > 1;
@@ -58,6 +65,7 @@ $has_autoplay  = $autoplay && count($slides) > 1;
 $classes = [
     'carousel',
     "carousel--per-view-{$per_view}",
+    "carousel--transition-{$transition}",
 ];
 if ($type === 'cinematic') {
     $classes[] = 'carousel--cinematic';
@@ -69,6 +77,7 @@ if ($type === 'cinematic') {
     id="<?php echo esc_attr($carousel_id); ?>"
     class="<?php echo esc_attr(implode(' ', $classes)); ?>"
     data-component="carousel"
+    data-transition="<?php echo esc_attr($transition); ?>"
     data-loop="<?php echo $loop ? 'true' : 'false'; ?>"
     data-autoplay="<?php echo $has_autoplay ? 'true' : 'false'; ?>"
     data-delay="<?php echo (int) $delay; ?>"
@@ -92,6 +101,10 @@ if ($type === 'cinematic') {
                 $text = $slide['text'] ?? '';
                 $align = $slide['align'] ?? 'left';
                 $button = $slide['button'] ?? null;
+                $buttons = array_key_exists('buttons', $slide)
+                    ? (is_array($slide['buttons']) ? $slide['buttons'] : [])
+                    : (is_array($button) && $button !== [] ? [$button] : []);
+                $buttons = array_values(array_filter($buttons, 'is_array'));
                 $pattern = $slide['pattern'] ?? '';
                 $pattern_args = $slide['args'] ?? [];
                 $align = in_array($align, ['left', 'center', 'right'], true) ? $align : 'left';
@@ -105,7 +118,7 @@ if ($type === 'cinematic') {
                         <div class="carousel__overlay"></div>
                     <?php endif; ?>
 
-                    <?php if ($title !== '' || $subtitle !== '' || $text !== '' || !empty($button)) : ?>
+                    <?php if ($title !== '' || $subtitle !== '' || $text !== '' || $buttons !== []) : ?>
                         <div class="carousel__content carousel__content--<?php echo esc_attr($align); ?>">
                             <?php if (is_scalar($subtitle) && $subtitle !== '') : ?>
                                 <?php $animation_order++; ?>
@@ -131,13 +144,16 @@ if ($type === 'cinematic') {
                                 ><?php echo wp_kses_post($text); ?></div>
                             <?php endif; ?>
 
-                            <?php if (is_array($button) && !empty($button)) : ?>
+                            <?php if ($buttons !== []) : ?>
                                 <?php $animation_order++; ?>
                                 <div
                                     class="carousel__actions carousel__animated-item"
                                     style="--carousel-animation-order: <?php echo (int) $animation_order; ?>"
                                 >
-                                    <?php wp_site_core_render_pattern('button/button', $button); ?>
+                                    <?php wp_site_core_render_pattern('button/button-group', [
+                                        'buttons' => $buttons,
+                                        'align' => $align,
+                                    ]); ?>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -162,7 +178,7 @@ if ($type === 'cinematic') {
         <div class="carousel__dots" role="group" aria-label="<?php esc_attr_e('Choisir une diapositive', 'wp-theme-test'); ?>"></div>
     <?php endif; ?>
 
-    <?php if ($has_autoplay) : ?>
+    <?php if ($has_autoplay && $show_pause) : ?>
         <button
             type="button"
             class="carousel__autoplay-toggle"

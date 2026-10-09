@@ -18,7 +18,16 @@ declare(strict_types=1);
 
 use OSW3\WpFeatCarousel\Services\SlideEligibilityService;
 use OSW3\WpFeatCarousel\Services\VisitorLocationResolver;
-use WP_Post;
+use OSW3\WpFeatCarousel\Models\Slide;
+
+if (
+    !class_exists(Slide::class)
+    || !class_exists(SlideEligibilityService::class)
+    || !class_exists(VisitorLocationResolver::class)
+) {
+    error_log('WP Site Core: carousel-dynamic requires WP Feat Carousel.');
+    return;
+}
 
 $args = isset($args) && is_array($args)
     ? $args
@@ -122,6 +131,15 @@ $dbSettings = get_post_meta(
 if (!is_array($dbSettings)) {
     $dbSettings = [];
 }
+$dbSettings = array_merge([
+    'mode' => 'slide',
+    'delay' => 5000,
+    'arrows' => 1,
+    'dots' => 1,
+    'loop' => 1,
+    'autoplay' => 1,
+    'show_pause' => 1,
+], $dbSettings);
 
 /*
  * Slides ordonnées enregistrées dans le carrousel.
@@ -180,15 +198,8 @@ foreach ($slideOrders as $item) {
     /*
      * Image de fond.
      */
-    $imageId = get_post_thumbnail_id($slideId);
-
-    $backgroundImage = $imageId > 0
-        ? wp_get_attachment_image_url($imageId, 'full')
-        : false;
-
-    $backgroundImage = is_string($backgroundImage)
-        ? $backgroundImage
-        : '';
+    $slide = new Slide($slidePost);
+    $backgroundImage = $slide->getImageUrl() ?? '';
 
     /*
      * Contenu éditorial.
@@ -224,39 +235,6 @@ foreach ($slideOrders as $item) {
         : '';
 
     /*
-     * CTA principal.
-     */
-    $primaryCtaText = get_post_meta(
-        $slideId,
-        '_slide_cta_primary_text',
-        true
-    );
-
-    $primaryCtaUrl = get_post_meta(
-        $slideId,
-        '_slide_cta_primary_url',
-        true
-    );
-
-    $primaryCtaText = is_scalar($primaryCtaText)
-        ? (string) $primaryCtaText
-        : '';
-
-    $primaryCtaUrl = is_scalar($primaryCtaUrl)
-        ? (string) $primaryCtaUrl
-        : '';
-
-    $button = null;
-
-    if ($primaryCtaText !== '') {
-        $button = [
-            'label' => $primaryCtaText,
-            'url'   => $primaryCtaUrl,
-            'type'  => 'primary',
-        ];
-    }
-
-    /*
      * Préparation de la slide pour le composant visuel.
      */
     $formattedSlides[] = [
@@ -264,8 +242,8 @@ foreach ($slideOrders as $item) {
         'title'    => $title,
         'subtitle' => $subtitle,
         'text'     => $text,
-        'align'    => 'left',
-        'button'   => $button,
+        'align'    => $slide->getContentAlignment(),
+        'buttons'  => $slide->getCtas(),
     ];
 }
 
@@ -300,11 +278,8 @@ unset(
  */
 $computedArgs = array_merge(
     [
-        'type' => (
-            ($dbSettings['mode'] ?? 'slide') === 'fade'
-                ? 'cinematic'
-                : 'standard'
-        ),
+        'type' => 'standard',
+        'transition' => ($dbSettings['mode'] === 'fade' ? 'fade' : 'slide'),
 
         'delay' => isset($dbSettings['delay'])
             ? absint($dbSettings['delay'])
@@ -317,6 +292,7 @@ $computedArgs = array_merge(
         'show_dots' => !empty(
             $dbSettings['dots']
         ),
+        'show_pause' => !empty($dbSettings['show_pause']),
 
         'loop' => !empty(
             $dbSettings['loop']

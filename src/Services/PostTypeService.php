@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace OSW3\WpSiteCore\Services;
 
-use OSW3\WpContentEvents\Module;
+use OSW3\WpSiteCore\Module;
 use WP_Post_Type;
 
 final class PostTypeService

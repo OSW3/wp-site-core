@@ -9,6 +9,8 @@ export class Carousel {
     this.nextBtn = element.querySelector('.carousel__control--next');
     this.dotsContainer = element.querySelector('.carousel__dots');
     this.autoplayToggle = element.querySelector('.carousel__autoplay-toggle');
+    this.isFade = element.dataset.transition === 'fade';
+    this.fadeIndex = 0;
 
     this.isLoop = element.dataset.loop === 'true';
     this.autoplayEnabled = element.dataset.autoplay === 'true';
@@ -48,12 +50,14 @@ export class Carousel {
 
   get visibleCount() {
     if (!this.slides.length) return 0;
+    if (this.isFade) return 1;
     const width = this.slides[0].getBoundingClientRect().width;
     const viewportWidth = this.carousel.querySelector('.carousel__track-container')?.clientWidth || width;
     return width > 0 ? Math.max(1, Math.round(viewportWidth / width)) : 1;
   }
 
   get currentIndex() {
+    if (this.isFade) return this.fadeIndex;
     return this.slideIndexes.get(this.track.firstElementChild) ?? 0;
   }
 
@@ -78,7 +82,10 @@ export class Carousel {
       dot.type = 'button';
       dot.className = 'carousel__dot';
       dot.setAttribute('aria-label', `Afficher la diapositive ${index + 1}`);
-      dot.addEventListener('click', () => this.goTo(index));
+      dot.addEventListener('click', (event) => {
+        if (event.detail > 0) this.explicitlyResumed = true;
+        this.goTo(index);
+      });
       this.dotsContainer.appendChild(dot);
       return dot;
     });
@@ -87,7 +94,7 @@ export class Carousel {
   updateLayout() {
     if (this.isAnimating) return;
     const width = this.slideWidth;
-    if (width > 0) this.track.style.transform = 'translateX(0)';
+    if (!this.isFade && width > 0) this.track.style.transform = 'translateX(0)';
     if (!this.isLoop) {
       const lastStart = Math.max(0, this.slides.length - this.visibleCount);
       while (this.currentIndex > lastStart) {
@@ -101,10 +108,12 @@ export class Carousel {
   updateState() {
     this.createDots();
     const visibleCount = this.visibleCount;
-    const visibleSlides = new Set(Array.from(this.track.children).slice(0, visibleCount));
+    const visibleSlides = new Set(this.isFade
+      ? [this.slides[this.fadeIndex]]
+      : Array.from(this.track.children).slice(0, visibleCount));
 
     this.slides.forEach((slide, index) => {
-      const isActive = slide === this.track.firstElementChild;
+      const isActive = this.isFade ? index === this.fadeIndex : slide === this.track.firstElementChild;
       const isVisible = visibleSlides.has(slide);
       slide.classList.toggle('carousel__slide--active', isActive);
       slide.setAttribute('aria-hidden', String(!isVisible));
@@ -160,6 +169,21 @@ export class Carousel {
     }
 
     if (distance === 0) return false;
+
+    if (this.isFade) {
+      this.isAnimating = true;
+      const outgoing = this.slides[this.fadeIndex];
+      const incoming = this.slides[targetIndex];
+      outgoing.classList.add('carousel__slide--leaving');
+      this.fadeIndex = targetIndex;
+      this.updateState();
+      await this.waitForFade(incoming);
+      outgoing.classList.remove('carousel__slide--leaving');
+      this.isAnimating = false;
+      this.updateState();
+      this.scheduleAutoplay();
+      return true;
+    }
 
     this.isAnimating = true;
     const width = this.slideWidth;
@@ -232,6 +256,22 @@ export class Carousel {
     });
   }
 
+  waitForFade(slide) {
+    if (this.reducedMotion.matches) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      let timeout;
+      const finish = (event) => {
+        if (event && (event.target !== slide || event.propertyName !== 'opacity')) return;
+        slide.removeEventListener('transitionend', finish);
+        window.clearTimeout(timeout);
+        resolve();
+      };
+      slide.addEventListener('transitionend', finish);
+      timeout = window.setTimeout(() => finish(), TRANSITION_DURATION + 100);
+    });
+  }
+
   async goTo(targetIndex) {
     if (this.isAnimating || !this.canMove) return;
     this.stopAutoplay();
@@ -268,12 +308,14 @@ export class Carousel {
   }
 
   bindEvents() {
-    this.prevBtn?.addEventListener('click', () => {
+    this.prevBtn?.addEventListener('click', (event) => {
+      if (event.detail > 0) this.explicitlyResumed = true;
       this.stopAutoplay();
       this.move('prev').then(() => this.scheduleAutoplay());
     });
 
-    this.nextBtn?.addEventListener('click', () => {
+    this.nextBtn?.addEventListener('click', (event) => {
+      if (event.detail > 0) this.explicitlyResumed = true;
       this.stopAutoplay();
       this.move('next').then(() => this.scheduleAutoplay());
     });
