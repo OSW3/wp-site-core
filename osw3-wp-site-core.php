@@ -12,25 +12,35 @@
 
 declare(strict_types=1);
 
-use OSW3\WpSiteCore\Registry\PluginRegistry;
-
 // Security check to prevent direct access to the file
 if (!defined('ABSPATH')) {
-    exit;
+  exit;
 }
 
 
 // Autoload dependencies using Composer
 // --
 
-$autoload = __DIR__ . '/vendor/autoload.php';
+$autoloads = [
+  __DIR__ . '/vendor/autoload.php',
+  dirname(__DIR__, 4) . '/vendor/autoload.php',
+];
+
+$autoload = null;
+
+foreach ($autoloads as $file) {
+  if (is_file($file)) {
+    $autoload = $file;
+    break;
+  }
+}
 
 if (!is_file($autoload)) {
-    add_action('admin_notices', static function (): void {
-        echo '<div class="notice notice-error"><p>';
-        echo esc_html__(sprintf('%s: Composer autoload is missing. Run composer install in the plugin directory.', \OSW3\WpSiteCore\Module::getName()), \OSW3\WpSiteCore\Module::getDomain());
-        echo '</p></div>';
-    });
+  add_action('admin_notices', static function (): void {
+    echo '<div class="notice notice-error"><p>';
+    echo esc_html__(sprintf('%s: Composer autoload is missing. Run composer install in the plugin directory.', \OSW3\WpSiteCore\Module::getName()), \OSW3\WpSiteCore\Module::getDomain());
+    echo '</p></div>';
+  });
 
     return;
 }
@@ -42,9 +52,9 @@ require_once $autoload;
 // --
 
 add_action('plugins_loaded', static function (): void {
-    if (class_exists(\OSW3\WpSiteCore\Module::class)) {
-        \OSW3\WpSiteCore\Module::init();
-    }
+  if (class_exists(\OSW3\WpSiteCore\Module::class)) {
+    \OSW3\WpSiteCore\Module::init();
+  }
 });
 
 
